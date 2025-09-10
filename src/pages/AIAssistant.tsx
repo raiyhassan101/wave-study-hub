@@ -3,11 +3,13 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Send, Bot, User, Sparkles, BookOpen, Calculator, Code, MessageCircle } from 'lucide-react';
+import { Send, Bot, User, Sparkles, BookOpen, Calculator, Code, MessageCircle, Loader2 } from 'lucide-react';
+import { chatAPI, ChatMessage } from '@/lib/api';
+import MathRenderer from '@/components/MathRenderer';
 
 const AIAssistant = () => {
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 1,
       type: 'assistant',
@@ -15,6 +17,7 @@ const AIAssistant = () => {
       timestamp: new Date(),
     },
   ]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const quickActions = [
     { icon: Calculator, label: 'Solve Math Problem', prompt: 'Help me solve this math problem:' },
@@ -23,29 +26,44 @@ const AIAssistant = () => {
     { icon: MessageCircle, label: 'Study Tips', prompt: 'Give me study tips for:' },
   ];
 
-  const handleSendMessage = () => {
-    if (!message.trim()) return;
+  const handleSendMessage = async () => {
+    if (!message.trim() || isLoading) return;
 
-    const newMessage = {
+    const userMessage: ChatMessage = {
       id: messages.length + 1,
       type: 'user',
       content: message,
       timestamp: new Date(),
     };
 
-    setMessages([...messages, newMessage]);
+    setMessages(prev => [...prev, userMessage]);
+    const currentMessage = message;
     setMessage('');
+    setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse = {
+    try {
+      const response = await chatAPI.sendMessage(currentMessage);
+      
+      const aiResponse: ChatMessage = {
         id: messages.length + 2,
         type: 'assistant',
-        content: "I'd be happy to help you with that! Could you provide more details so I can give you the most accurate and helpful response?",
+        content: response.response,
         timestamp: new Date(),
       };
+      
       setMessages(prev => [...prev, aiResponse]);
-    }, 1000);
+    } catch (error) {
+      console.error('Error getting AI response:', error);
+      const errorResponse: ChatMessage = {
+        id: messages.length + 2,
+        type: 'assistant',
+        content: 'Sorry, I encountered an error while processing your request. Please try again.',
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, errorResponse]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleQuickAction = (prompt: string) => {
@@ -194,12 +212,16 @@ const AIAssistant = () => {
                     <div className={`max-w-xs lg:max-w-md xl:max-w-lg ${
                       msg.type === 'user' ? 'text-right' : 'text-left'
                     }`}>
-                      <div className={`inline-block p-3 rounded-2xl ${
+                      <div className={`${
                         msg.type === 'user'
-                          ? 'bg-primary text-primary-foreground'
-                          : 'bg-muted text-foreground'
+                          ? 'bg-primary text-primary-foreground p-3 rounded-2xl'
+                          : 'bg-muted text-foreground p-4 rounded-2xl'
                       }`}>
-                        <p className="text-sm">{msg.content}</p>
+                        {msg.type === 'assistant' ? (
+                          <MathRenderer content={msg.content} />
+                        ) : (
+                          <p className="text-sm">{msg.content}</p>
+                        )}
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">
                         {msg.timestamp.toLocaleTimeString()}
@@ -207,6 +229,23 @@ const AIAssistant = () => {
                     </div>
                   </div>
                 ))}
+                
+                {/* Loading indicator */}
+                {isLoading && (
+                  <div className="flex items-start space-x-3 animate-fade-in">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-primary to-accent text-white">
+                      <Bot className="w-4 h-4" />
+                    </div>
+                    <div className="max-w-xs lg:max-w-md xl:max-w-lg">
+                      <div className="inline-block p-3 rounded-2xl bg-muted text-foreground">
+                        <div className="flex items-center space-x-2">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <p className="text-sm">AI is thinking...</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Input */}
@@ -221,10 +260,14 @@ const AIAssistant = () => {
                   />
                   <Button
                     onClick={handleSendMessage}
-                    disabled={!message.trim()}
+                    disabled={!message.trim() || isLoading}
                     className="rounded-full bg-primary hover:bg-primary/90 px-6"
                   >
-                    <Send className="w-4 h-4" />
+                    {isLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Send className="w-4 h-4" />
+                    )}
                   </Button>
                 </div>
                 

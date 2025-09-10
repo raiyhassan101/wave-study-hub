@@ -1,73 +1,116 @@
-# Welcome to your Lovable project
+# Wave Study Hub
 
-## Project info
+A modern AI-powered study platform designed for Pakistani students, featuring an intelligent AI assistant that provides personalized academic support with mathematical expression rendering and clean formatting.
 
-**URL**: https://lovable.dev/projects/3b8df33d-b069-4f6b-b846-7939af77a44c
+## Features
 
-## How can I edit this code?
+- 🤖 **AI Study Assistant** - Powered by N8N webhook integration
+- 📚 **Multiple Study Modules** - Courses, Notes, Test Prep, Project Tools
+- 🧮 **Math Expression Rendering** - Clean LaTeX to readable math conversion
+- 🎨 **Modern UI** - Built with React, TypeScript, and Tailwind CSS
+- 📱 **Responsive Design** - Works on all devices
+- ⚡ **Fast Performance** - Optimized with Vite
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- **Frontend**: React 18 + TypeScript
+- **Styling**: Tailwind CSS + shadcn/ui
+- **Build Tool**: Vite
+- **Math Rendering**: Custom MathRenderer component
+- **Deployment**: Vercel-ready
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/3b8df33d-b069-4f6b-b846-7939af77a44c) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js 18+ 
+- npm or yarn
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. Clone the repository
+```bash
+git clone https://github.com/raiyhassan101/wave-study-hub.git
+cd wave-study-hub
+```
 
-Follow these steps:
+2. Install dependencies
+```bash
+npm install
+```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+3. Set up environment variables
+```bash
+cp env.example .env.local
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+4. Start development server
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Environment Variables
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Create a `.env.local` file with:
 
-**Use GitHub Codespaces**
+```env
+VITE_WEBHOOK_URL=https://your-n8n-webhook-url
+VITE_API_BASE_URL=https://your-api-domain.com
+VITE_NODE_ENV=production
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Deployment
 
-## What technologies are used for this project?
+### Vercel (Recommended)
 
-This project is built with:
+1. Push to GitHub
+2. Connect repository to Vercel
+3. Set environment variables in Vercel dashboard
+4. Deploy!
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Manual Build
 
-## How can I deploy this project?
+```bash
+npm run build
+npm run preview
+```
 
-Simply open [Lovable](https://lovable.dev/projects/3b8df33d-b069-4f6b-b846-7939af77a44c) and click on Share -> Publish.
+## Project Structure
 
-## Can I connect a custom domain to my Lovable project?
+```
+src/
+├── components/          # Reusable UI components
+│   ├── ui/             # shadcn/ui components
+│   └── MathRenderer.tsx # Math expression renderer
+├── pages/              # Application pages
+│   ├── AIAssistant.tsx # AI chat interface
+│   ├── Courses.tsx     # Course management
+│   └── ...
+├── lib/                # Utilities and API
+│   └── api.ts          # Webhook integration
+└── hooks/              # Custom React hooks
+```
 
-Yes, you can!
+## AI Assistant Features
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- **Webhook Integration**: Connects to N8N backend
+- **Math Rendering**: Converts LaTeX to clean math expressions
+- **Loading States**: Visual feedback during AI processing
+- **Error Handling**: Graceful fallback for failed requests
+- **Conversation Tracking**: Maintains chat history
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
+
+## License
+
+This project is licensed under the MIT License.
+
+## Support
+
+For support, email support@wavestudyhub.com or create an issue on GitHub.
